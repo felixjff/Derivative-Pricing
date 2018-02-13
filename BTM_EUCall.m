@@ -1,4 +1,4 @@
-%Purpose: Adaptable Binomial-Tree model for Call Option pricing. 
+%Purpose: Adaptable Binomial-Tree model for European Call Option pricing. 
 
 function [output] = BTM_EUCall(s_0,k,r,vol,T,N)
 
@@ -30,7 +30,7 @@ for i = (N+1):-1:2
    
    %Compute option prices at T-1 in each node
    for j = i:-1:2
-     f_v_(j-1) = (p*f_v(j) + (1-p)*f_v(j-1))*exp(-r*(1/N));
+     f_v_(j-1) = (p*f_v(j-1) + (1-p)*f_v(j))*exp(-r*(1/N));
    end
     
    f_v = f_v_;

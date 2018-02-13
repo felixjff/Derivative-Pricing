@@ -80,6 +80,92 @@ ylabel('Implied Option Value');
 BS_HP = BS_HP_EUCall(s_0,k,r,vol,T);
 
 %Binomial-Tree Model
-
+BTM_HP = BTM_HP_EUCall(s_0,k,r,vol,T, N);
 
 %% Volatility Grid 
+
+%Hedging Parameter (Black-Scholes)
+BS_HP_ = BS_HP_EUCall(s_0,k,r,vol_,T);
+
+%Plot behavior of price as a function of stock volatility
+plot(vol_,BS_HP_);
+title('Hedge Parameter (Black-Scholes)');
+xlabel('Stock Volatility');
+ylabel('Implied Hedge');
+
+
+%% Hedging Parameter (Binomial Tree Model)
+BTM_HP_ = zeros(length(vol_),1)';
+j = 1;
+for i = vol_
+    BTM_HP_(j) = BTM_HP_EUCall(s_0,k,r,i,T,N);
+    j = j + 1;
+end
+
+%Plot behavior of price as a function of stock volatility
+plot(vol_,BTM_HP_);
+title('Hedge Parameter (Binomial Tree Model)');
+xlabel('Stock Volatility');
+ylabel('Implied Hedge');
+
+%% Comparison of Hedge Parameter Values
+diff_val_HP = BTM_HP_ - BS_HP_;
+
+plot(vol_,diff_val_HP);
+title('Binomial Tree vs Black-Scholes');
+xlabel('Stock Volatility');
+ylabel('Hedge Differences');
+
+
+
+
+
+%% AMERICAN OPTIONS %%
+
+
+
+
+%% American Call Option
+
+%Binomial Tree with Stock Vol = 20%
+BTM_f_v_A = BTM_AMCall(s_0,k,r,vol,T,N);
+disp(sprintf('Value of American Call usng BTM is %d', BTM_f_v_A));
+
+%Volatility Grid
+BTM_f_v_A_ = zeros(length(vol_),1)';
+j = 1;
+for i = vol_
+    BTM_f_v_A_(j) = BTM_AMCall(s_0,k,r,i,T,N);
+    j = j + 1;
+end
+
+%% Plot behavior of price as a function of stock volatility
+plot(vol_,BTM_f_v_A_);
+title('American Call Option Price (Binomial Tree Model)');
+xlabel('Stock Volatility');
+ylabel('Implied Option Value');
+
+
+%% American Put Option
+
+%Binomial Tree with Stock Vol = 20%
+BTM_f_v_AP = BTM_AMPut(s_0,k,r,vol,T,N);
+disp(sprintf('Value of American Call usng BTM is %d', BTM_f_v_AP));
+
+%Volatility Grid
+BTM_f_v_AP_ = zeros(length(vol_),1)';
+j = 1;
+for i = vol_
+    BTM_f_v_AP_(j) = BTM_AMPut(s_0,k,r,i,T,N);
+    j = j + 1;
+end
+
+%% Plot behavior of price as a function of stock volatility
+plot(vol_,BTM_f_v_AP_);
+title('American Call Option Price (Binomial Tree Model)');
+xlabel('Stock Volatility');
+ylabel('Implied Option Value');
+
+
+
+

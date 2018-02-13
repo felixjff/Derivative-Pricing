@@ -25,16 +25,20 @@ p = (exp(r*(T/N)) - d)/(u - d);
    end
 
    %%
-for i = (N+1):-1:2  
+for i = (N+1):-1:3  
    %Create space for option price at T-1
    f_v_ = zeros(i-1,1);
    
-   %Compute option prices at T-1 in each node
+   %Compute option prices at T-1 in each node and iterate backwards up to
+   %the first step in the tree.
    for j = i:-1:2
-     f_v_(j-1) = (p*f_v(j) + (1-p)*f_v(j-1))*exp(-r*(1/N));
+     f_v_(j-1) = (p*f_v(j-1) + (1-p)*f_v(j))*exp(-r*(1/N));
    end
     
    f_v = f_v_;
 end
 
-output = f_v;
+%Compute the hedge parameter: delta = (f_u - f_d)/(s_0*u - s_0*d) at n = 1.
+BTM_HP = (f_v(1) - f_v(2))/(s_0*u - s_0*d);
+
+output = BTM_HP;
