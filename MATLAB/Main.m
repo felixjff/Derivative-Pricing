@@ -106,7 +106,7 @@ end
 plot(vol_,BTM_HP_);
 title('Hedge Parameter (Binomial Tree Model)');
 xlabel('Stock Volatility');
-ylabel('Implied Hedge');    
+ylabel('Implied Hedge');
 
 %% Comparison of Hedge Parameter Values
 diff_val_HP = BTM_HP_ - BS_HP_;
