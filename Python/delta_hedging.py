@@ -52,10 +52,30 @@ def delta_hedging(S_0, K, r, sigma, exp_sigma, freq):
     in_stock -= S[-1]
 
     # Final balance
-    return (in_stock + balance), portfolio_value
+    return (in_stock + balance), portfolio_value, f, S
     
-results1 = [delta_hedging(S_0, K, r, sigma, exp_sigma, 1)[0] for i in range(2000)]
-results7 = [delta_hedging(S_0, K, r, sigma, exp_sigma, 7)[0] for i in range(2000)]
-plt.hist(results, bins=50)
+results1 = [delta_hedging(S_0, K, r, sigma, exp_sigma, 1)[0] for i in range(10)]
+results7 = [delta_hedging(S_0, K, r, sigma, exp_sigma, 7)[0] for i in range(10)]
+
+plt.hist(results1, bins=50)
 plt.show()
+plt.hist(results7, bins=50)
+plt.show()
+
+profit, pf, f, S = delta_hedging(S_0, K, r, sigma, exp_sigma, 7)
+
+plt.plot(S)
+plt.xlabel('t (day)')
+plt.ylabel('value ($)')
+plt.title('Stock Movement (Geometric Brownian Motion)')
+plt.show()
+
+plt.plot(range(T-1),f,label='option price')
+plt.plot(range(0,T-1,freq),pf, label='portfolio value')
+plt.xlabel('t (day)')
+plt.ylabel('value ($)')
+plt.legend(loc='best')
+plt.show()
+
+
 
