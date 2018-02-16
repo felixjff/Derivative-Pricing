@@ -27,7 +27,7 @@ def option_price(option, T, N, S_0, K, r, sigma, AM=False):
         f_ex = [max(0,m*(s-K)) for s in S]
         
         # model values at i
-        f_model = [exp(-r*T/N)*(p*f[j] + (1-p)*f[j+1]) for j in range(i+1)]
+        f_model = [exp(-r*T/N)*((1-p)*f[j] + p*f[j+1]) for j in range(i+1)]
         
         # choose max if option is American
         f = [max(f_ex[j],f_model[j]) for j  in range(i+1)] if AM == True else f_model
