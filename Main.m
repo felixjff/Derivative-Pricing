@@ -162,7 +162,7 @@ end
 
 %% Plot behavior of price as a function of stock volatility
 plot(vol_,BTM_f_v_AP_);
-title('American Call Option Price (Binomial Tree Model)');
+title('American Put Option Price (Binomial Tree Model)');
 xlabel('Stock Volatility');
 ylabel('Implied Option Value');
 
