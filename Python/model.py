@@ -1,4 +1,5 @@
 from math import *
+from scipy.stats import norm
 
 def option_price(option, T, N, S_0, K, r, sigma, AM=False):
     '''Calculate the price of an option derivative'''
@@ -27,7 +28,7 @@ def option_price(option, T, N, S_0, K, r, sigma, AM=False):
         f_ex = [max(0,m*(s-K)) for s in S]
         
         # model values at i
-        f_model = [exp(-r*T/N)*(p*f[j] + (1-p)*f[j+1]) for j in range(i+1)]
+        f_model = [exp(-r*T/N)*((1-p)*f[j] + p*f[j+1]) for j in range(i+1)]
         
         # choose max if option is American
         f = [max(f_ex[j],f_model[j]) for j  in range(i+1)] if AM == True else f_model
@@ -38,7 +39,7 @@ def option_price(option, T, N, S_0, K, r, sigma, AM=False):
     
     return f[0], delta
     
-def black_scholes(option, T, N, S_0, K, r, sigma):
+def black_scholes(option, T, S_0, K, r, sigma):
     '''Calculate the price of a EU call option
        Using Black-Scholes formula'''
     
@@ -50,5 +51,5 @@ def black_scholes(option, T, N, S_0, K, r, sigma):
     else:
         f = exp(-r*T)*K*norm.cdf(-d2) - S_0*norm.cdf(-d1)
         
-    return f, norm.cdf(d2)
+    return f, norm.cdf(d1)
     
