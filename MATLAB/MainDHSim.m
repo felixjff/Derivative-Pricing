@@ -63,7 +63,7 @@ ylabel('Portfolio and Option Values');
 %% Setting 2: Parameters (Daily adjustment + mismatching volatilities)
 hf = 1; 
 vol_o = 0.2;
-vol_s = 0.7;
+vol_s = 0.2;
 
 NG_vol = zeros(2,1);
 TC_vol = zeros(2,1);
@@ -84,10 +84,6 @@ for i = 1:paths
       end
     end
 end
-
-plot(1:252, f_t_ac(:,1),1:252, f_t_vol(:,1), 1:252)
-hold on
-legend('Expected Value', 'Actual Value')
 
 
 %% Plot
@@ -110,7 +106,8 @@ hold on
 ylabel('Portfolio and Option Values');
 
 %% Compute actual tracking error
-P_v_t_a = P_v_t(252,:) + f_t(252,:) - f_t_ac(252,:);
+%P_v_t_a = P_v_t_vol(252,:) + f_t(252,:) - f_t_ac(252,:); %Mismatching
+P_v_t_a = P_v_t_vol(252,:); %Matching
 %Average and std. from 1000 simulations
 mean(P_v_t_a)
 std(P_v_t_a)
