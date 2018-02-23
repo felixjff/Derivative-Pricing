@@ -62,6 +62,7 @@ class Option:
         return np.mean(data), ci95
     
     def bump_rev(self, shift, trials=1000, repeats=1000, re_seed=False):
+        '''Calculate delta using bump-and-revalue method'''
     
         seed = np.random.randint(0,10)
         np.random.seed(seed)
@@ -77,6 +78,7 @@ class Option:
         return delta, total_error
         
     def lh_ratio(self, trials=1000, repeats=1000):
+    '''Calculate delta using likelihood ratio estimation'''
                 
         S_0 = self.S_0
         
