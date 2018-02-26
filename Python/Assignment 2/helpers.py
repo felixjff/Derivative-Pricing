@@ -5,7 +5,7 @@ from tqdm import tqdm
 class Option:
     '''Defines the option contract'''
     
-    def __init__(self, option_type, S_0, K, r, sigma, T, digi=False):
+    def __init__(self, option_type, S_0, K, r, sigma, T, digi=False, asian=False):
         '''Initiate variables'''
         
         self.type = option_type
@@ -15,27 +15,35 @@ class Option:
         self.sigma = sigma
         self.T = T
         self.digi = digi
+        self.asian = asian
         
     def calc_payoff(self, shift=0):
         '''Calculate the payoff of an option'''
         
         S = self.S_0 + shift
-        # stock price at maturity (analytic)
-        Z = np.random.normal()
-        S_T = S*(np.exp(self.r-0.5*self.sigma**2*self.T 
-                        + self.sigma*np.sqrt(self.T)*Z))
         
-        # Euler scheme
-        #S_T = self.S_0
-        #steps = 365
-        #for t in range(steps):
-        #    S_T += S_T*(self.r/steps + self.sigma*np.sqrt(1/steps)*np.random.normal())
+        Z = np.random.normal()
+
+        if self.asian == True:
+            # stock price via Euler scheme
+            S_T = self.S_0
+            steps = 365
+            S_vals = []
+            for t in range(steps):
+               S_T += S_T*(self.r/steps + self.sigma*np.sqrt(1/steps)*np.random.normal())
+               S_vals.append(S_T)
+            A = geo_mean(S_vals)
+        else:
+            # stock price at maturity (analytic)
+            S_T = S*(np.exp(self.r-0.5*self.sigma**2*self.T 
+                         + self.sigma*np.sqrt(self.T)*Z))
+        
         
         # calculate payoff given K
         if self.type == 'call':
-            payoff = max(S_T-self.K,0)
+            payoff = max(S_T-self.K,0) if self.asian == False else max(A-self.K,0)
         elif self.type == 'put':
-            payoff = max(self.K-S_T,0)
+            payoff = max(self.K-S_T,0) if self.asian == False else max(self.K-A,0)
         else:
             raise ValueError('Option type not recognized')
         
@@ -62,7 +70,6 @@ class Option:
         return np.mean(data), ci95
     
     def bump_rev(self, shift, trials=1000, repeats=1000, re_seed=False):
-        '''Calculate delta using bump-and-revalue method'''
     
         seed = np.random.randint(0,10)
         np.random.seed(seed)
@@ -78,7 +85,6 @@ class Option:
         return delta, total_error
         
     def lh_ratio(self, trials=1000, repeats=1000):
-    '''Calculate delta using likelihood ratio estimation'''
                 
         S_0 = self.S_0
         
@@ -94,3 +100,8 @@ class Option:
         ci95 = 1.96*np.std(data)/np.sqrt(repeats)
         
         return np.mean(data), ci95
+        
+def geo_mean(iterable):
+    a = np.array(iterable)
+    
+    return np.exp(np.sum(np.log(a))/a.size)
