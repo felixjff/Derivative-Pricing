@@ -10,9 +10,9 @@ vol = 0.2;
 
 %% Use Euler Scheme and Monte Carlo (same seed)
 seed1 = 10;
-seed2 = 5;
-sim = 10000000;
-bump = [0.01*s_0, 0.02*s_0, 0.05*s_0];
+seed2 = 10;
+sim = 1000000;
+bump = [0.01*s_0, 0.03*s_0, 0.8*s_0];
 s_0_bump = NaN(length(bump) + 1,1);
 s_0_bump(1) = s_0;
 s_0_bump(2) =  s_0 + bump(1);   %First bump

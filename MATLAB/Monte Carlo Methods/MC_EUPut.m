@@ -17,7 +17,7 @@ BS_f_v = Black_Scholes_EUPut(s_0,k,r,vol,T);
 %(result follows from applying Euler method and integration)
 
 %% Convergence analysis (Changing Number of Path Realizations, 1000 Trials)
-sim = 5000:5000:50000;
+sim = [100, 2000:2000:10000];
 s_T = NaN(sim(length(sim)), length(sim));
 payoff = NaN(sim(length(sim)), length(sim));
 for m = 1:length(sim)
@@ -41,13 +41,14 @@ for i = 1:length(sim)
     f_0(i,2) = nanstd(payoff(:,i))';
 end
 %%
-sim = 5000:5000:50000;
+sim = [100, 2000:2000:10000];
 plot(1:length(sim), ones(length(sim),1).*BS_f_v)
 hold on
 errorbar(1:length(sim), f_0(:,1), 1.96.*f_0(:,2)./sqrt(sim'),'rx'); %Assuming normal distribution for estimate values.
 title('MC European Put Price Estimate & 95% Confidence Intervals');
 xlabel('Number of Realizations');
 set(gca,'XTick', 1:length(sim), 'XTickLabel', sim);
+set(gca, 'FontSize', 8)
 ylabel('Option Price Estimate');
 
 
@@ -93,7 +94,7 @@ ylabel('Option Price Estimate');
 
 %% MC Price Sensitivity Analysis (Strike Price) 
 % Trials and realizations are fixed such that std of estimate is low
-sim = 30000;
+sim = 50000;
 k_ = 89:1:109;
 
 s_T_k = NaN(sim,1);
