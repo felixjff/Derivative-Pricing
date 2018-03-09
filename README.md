@@ -17,6 +17,7 @@ Pricing methods:
 - Binomial tree
 - Monte Carlo method
 - Black-Scholes formula
+- Partial Different Equations (FTCS and Crank-Nikolson scheme)
 
 Variance Reduction Techinques:
 - Bump-revalue method
