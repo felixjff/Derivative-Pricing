@@ -1,5 +1,5 @@
 # Derivative-Pricing
-Result of some derivative pricing exercises. The exercises cover different algorithms for derivative pricing and investigate their properties. Algorithms for all topics are coded in Python and MATLAB. The topics methods covered in this repository are:
+Result of some derivative pricing exercises. The exercises cover different algorithms for derivative pricing and investigate their properties. It also explores topics related to derivative pricing, such as proxy methods to estimate spreads of Credit Default Swaps. Algorithms for all topics are coded in Python and MATLAB. The topics methods covered in this repository are:
 
 Pricing of:
 - European options
@@ -25,3 +25,8 @@ Variance Reduction Techinques:
 
 Hedging:
 - Delta hedging
+
+CDS Spread Proxy Methods (Python):
+- Intersection
+- Cross-section
+- Cross-section with equity return and volatility
