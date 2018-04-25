@@ -17,6 +17,15 @@ from scipy import stats
 from scipy.stats import norm
 
 #Loading Data
-dataset = pd.read_csv('Data/CDS_data.csv')
+CDS_data = pd.read_csv('Data/CDS_data.csv')
 
-#Normalizing spreads
+### Pre-Process ###
+
+
+### Cross-Section Testing ###
+
+#1. Create N data sets.
+
+#2. Apply the methodologies to every possible N-1 data set.
+
+#3. Test their accuracy on the 'left-one-out' subsets.
