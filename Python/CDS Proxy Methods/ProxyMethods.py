@@ -105,20 +105,59 @@ class ProxyMethods:
         #Log-transformation of spread
         CDS_data[self.spreadXy] = np.log(CDS_data[self.spreadXy])
         
-        #Apply the same algorithm as for intersection method to create buckets and obtain estimate
+        #Intercept based: Europe > Financials > A
+        b_0 = np.mean(CDS_data.loc[np.logical_and(np.logical_and(CDS_data[self.index_names[0]] == 'Europe', CDS_data[self.index_names[1]] == 'Financials'), CDS_data[self.index_names[2]] == 'A'), self.spreadXy])
+        test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == 'Europe', test_set[self.index_names[1]] == 'Financials'), test_set[self.index_names[2]] == 'A'), 'CrossEstimate'] = b_0
+        
         h_cat = test_set[self.index_names[0]].unique()
 
         for i in h_cat:
+            
+            #If not in intercept, compute difference from intercept value to current value
+            if i != 'Europe':
+                #Step to other region
+                step_region = np.mean(CDS_data.loc[np.logical_and(np.logical_and(CDS_data[self.index_names[0]] == i, CDS_data[self.index_names[1]] == 'Financials'), CDS_data[self.index_names[2]] == 'A'), self.spreadXy])
+                #Region factor: from Europe to current region
+                b_1 = step_region - b_0
+                
             h2_cat = []
             h2_cat = test_set.loc[test_set[self.index_names[0]] == i, self.index_names[1]].unique()
             if len(h2_cat) != 0:
                 for j in h2_cat: 
+                    
+                    #If not in intercept, compute difference from intercept value to current value
+                    if j != 'Financials':
+                        #Step to other sector
+                        step_sector = np.mean(CDS_data.loc[np.logical_and(np.logical_and(CDS_data[self.index_names[0]] == 'Europe', CDS_data[self.index_names[1]] == j), CDS_data[self.index_names[2]] == 'A'), self.spreadXy])
+                        #Sector factor: from Financials to current sector
+                        b_2 = step_sector - b_0
+                    
                     h3_cat = []
                     h3_cat = test_set.loc[np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), self.index_names[2]].unique()
                     if len(h3_cat) != 0:
                         for m in h3_cat:
-                            s_hat = CDS_data.loc[np.logical_and(np.logical_and(CDS_data[self.index_names[0]] == i, CDS_data[self.index_names[1]] == j), CDS_data[self.index_names[2]] == m), self.spreadXy]
-                            test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = np.nanmean(s_hat)
+                            
+                            #If not the intercept, compute difference from intercept value to current value
+                            if m != 'A' :
+                                #Step to other rating
+                                step_rating = np.mean(CDS_data.loc[np.logical_and(np.logical_and(CDS_data[self.index_names[0]] == 'Europe', CDS_data[self.index_names[1]] == 'Financials'), CDS_data[self.index_names[2]] == m), self.spreadXy])
+                                #Sector factor: from A to current rating
+                                b_3 = step_rating - b_0
+                            #Compute estimate
+                            if i != 'Europe' and j != 'Financials' and m != 'A' :
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_1 + b_2 + b_3 + b_0
+                            elif i == 'Europe' and j == 'Financials' and m != 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_3 + b_0 
+                            elif i == 'Europe' and j != 'Financials' and m == 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_2 + b_0 
+                            elif i != 'Europe' and j == 'Financials' and m == 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_1 + b_0 
+                            elif i == 'Europe' and j != 'Financials' and m != 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_2 + b_3 + b_0 
+                            elif i != 'Europe' and j == 'Financials' and m != 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_1 + b_3 + b_0 
+                            elif i != 'Europe' and j != 'Financials' and m == 'A':
+                                test_set.loc[np.logical_and(np.logical_and(test_set[self.index_names[0]] == i, test_set[self.index_names[1]] == j), test_set[self.index_names[2]] == m), 'CrossEstimate'] = b_1 + b_2 + b_0 
 
         test_set['CrossEstimate'] = np.exp(test_set['CrossEstimate'])
         

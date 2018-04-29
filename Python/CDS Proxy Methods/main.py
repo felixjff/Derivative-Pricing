@@ -37,7 +37,7 @@ CDS_data[SpreadXy] = proxy_model.noralize(recovery_rates, CDS_data[SpreadXy])
 ### Cross-Validation Out-of-Sample ###
 
 num_models = ['InterSection', 'CrossSection', 'Equity', 'EquityVol']
-cross_validations = 10
+cross_validations = 20
 sample_size = len(CDS_data)/cross_validations
 
 performance_rmse = np.zeros((cross_validations, len(num_models)))
