@@ -382,15 +382,16 @@ plt.plot(proxy_crosssection.index.values, proxy_intersection)
 plt.plot(proxy_crosssection.index.values, proxy_crosssection)
 plt.plot(proxy_crosssection.index.values, proxy_crosssection_v2)
 plt.plot(proxy_crosssection.index.values, proxy_CDS_vol)
-plt.xlabel('Date')
-plt.ylabel('5y Spread')
-plt.title('Spread Proxies Overtime')
+plt.xlabel('Date', fontsize = 15)
+plt.ylabel('5y Spread', fontsize = 15)
+plt.title('Spread Proxies Overtime', fontsize = 15)
 plt.xticks([0,50,100,150, 200, 250], [performance_ot_rmse.index.values[0],
             performance_ot_rmse.index.values[50],
             performance_ot_rmse.index.values[100],
             performance_ot_rmse.index.values[150],
             performance_ot_rmse.index.values[200],
             performance_ot_rmse.index.values[250]])   
+plt.tick_params(labelsize=12)
     
 
 
