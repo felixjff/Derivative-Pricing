@@ -30,3 +30,8 @@ CDS Spread Proxy Methods (Python):
 - Intersection
 - Cross-section
 - Cross-section with equity return and volatility
+
+Implied Volatility Modelling (Python)
+- Semi-Parametric methods
+- No-arbitrage conditions
+- Newton-Rapshon root finding algorithm
